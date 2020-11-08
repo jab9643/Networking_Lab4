@@ -1,4 +1,3 @@
-
 from socket import *
 import os
 import sys
@@ -52,13 +51,13 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
 
         # Fetch the ICMP header from the IP packet
         icmpHeader = recPacket[20:28]
-        type, code, checksum, id, sequence = struct.unpack("bbHHh", icmpHeader)
+        reqType, code, checksum, packetID, sequence = struct.unpack("bbHHh", icmpHeader)
 
-        if id == ID:
+        if packetID == ID:
             bytesDouble = struct.calcsize("d")
             timeSent = struct.unpack("d", recPacket[28:28 + bytesDouble])[0]
-            roundTripTime = timeReceived - timeSent
-            return roundTripTime * 1000
+            roundTripTime = (timeReceived - timeSent) * 1000
+            return roundTripTime 
 
         # Fill in end
         timeLeft = timeLeft - howLongInSelect
