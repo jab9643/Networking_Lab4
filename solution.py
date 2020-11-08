@@ -124,6 +124,7 @@ def ping(host, timeout=1):
         print(delay)
         time.sleep(1)  # one second
 
+    list.sort()
     packet_min = min(list)
     packet_avg = sum(list) / 4
     packet_max = max(list)
