@@ -1,5 +1,5 @@
 from socket import *
-from statistics import *
+from statistics import stdev
 import os
 import sys
 import struct
@@ -127,9 +127,9 @@ def ping(host, timeout=1):
     packet_min = min(list)
     packet_avg = sum(list) / 4
     packet_max = max(list)
-    stdev_var = list
+    stdev_var = stdev(list)
 
-    vars = [str(round(packet_min, 2)), str(round(packet_avg, 2)), str(round(packet_max, 2)),str(round(stdev(stdev_var), 2))]
+    vars = [str(round(packet_min, 2)), str(round(packet_avg, 2)), str(round(packet_max, 2)),str(round(stdev_var, 2))]
 
     print(vars)
 
