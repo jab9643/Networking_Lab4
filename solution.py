@@ -1,4 +1,5 @@
 from socket import *
+from statistics import *
 import os
 import sys
 import struct
@@ -51,13 +52,13 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
 
         # Fetch the ICMP header from the IP packet
         icmpHeader = recPacket[20:28]
-        reqType, code, checksum, packetID, sequence = struct.unpack("bbHHh", icmpHeader)
+        reqType, code, checkSum, packetID, sequence = struct.unpack("bbHHh", icmpHeader)
 
         if packetID == ID:
             bytesDouble = struct.calcsize("d")
             timeSent = struct.unpack("d", recPacket[28:28 + bytesDouble])[0]
             roundTripTime = (timeReceived - timeSent) * 1000
-            return roundTripTime 
+            return roundTripTime
 
         # Fill in end
         timeLeft = timeLeft - howLongInSelect
@@ -114,13 +115,25 @@ def ping(host, timeout=1):
     print("Pinging " + dest + " using Python:")
     print("")
     # Calculate vars values and return them
-    #  vars = [str(round(packet_min, 2)), str(round(packet_avg, 2)), str(round(packet_max, 2)),str(round(stdev(stdev_var), 2))]
+    list = []
+
     # Send ping requests to a server separated by approximately one second
     for i in range(0,4):
         delay = doOnePing(dest, timeout)
+        list.append(delay)
         print(delay)
         time.sleep(1)  # one second
 
+    packet_min = min(list)
+    packet_avg = sum(list) / 4
+    packet_max = max(list)
+    stdev_var = list
+
+    vars = [str(round(packet_min, 2)), str(round(packet_avg, 2)), str(round(packet_max, 2)),str(round(stdev(stdev_var), 2))]
+
+    print(vars)
+
+    return list
     return vars
 
 if __name__ == '__main__':
